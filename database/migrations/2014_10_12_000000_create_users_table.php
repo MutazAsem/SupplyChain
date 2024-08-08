@@ -16,18 +16,27 @@ return new class extends Migration
             $table->string('name');
             $table->string('last_name')->nullable();
             $table->string('email')->unique();
-            $table->integer('mobile')->nullable();
-            $table->string('gender')->nullable();
+            $table->integer('phone')->nullable();
+            $table->enum('gender', ['male', 'female'])->nullable();
             $table->boolean('status')->default(true);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->foreignId('current_team_id')->nullable();
-            $table->string('profile_photo_path', 2048)->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
+
+
+        Schema::create('sessions', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->foreignId('user_id')->nullable()->index();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->longText('payload');
+            $table->integer('last_activity')->index();
+        });
     }
+
 
     /**
      * Reverse the migrations.

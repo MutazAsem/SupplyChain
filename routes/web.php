@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+/* fixe error logout redirect when user information has been changed  */
+
+Route::get('/login', function () {
+    return redirect(route('filament.admin.auth.login'));
+})->name('login');
