@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->unsignedBigInteger('category_id');
-            $table->unsignedBigInteger('farmer_id');
+            $table->unsignedBigInteger('farm_id');
             $table->string('unit');
             $table->integer('quantity_available');
             $table->string('packaging');
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('category_id')->references('id')->on('categories');
-            $table->foreign('farmer_id')->references('id')->on('farms');
+            $table->foreign('farm_id')->references('id')->on('farms');
         });
     }
 

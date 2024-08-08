@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('owner_id');
             $table->string('type');
             $table->integer('commercial_registration_number');
+            $table->boolean('status')->default(true);
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('owner_id')->references('id')->on('users');

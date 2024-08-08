@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('commercial_registration_number');
             $table->string('farming_methods')->nullable();
             $table->string('pesticides')->nullable();
+            $table->boolean('status')->default(true);
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('owner_id')->references('id')->on('users');

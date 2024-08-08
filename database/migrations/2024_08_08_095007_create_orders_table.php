@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('supplier_id');
-            $table->unsignedBigInteger('farmer_id');
+            $table->unsignedBigInteger('farm_id');
             $table->unsignedBigInteger('product_id');
             $table->decimal('quantity',10,2)->default(1);
             $table->decimal('unit_price',10,2);
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('supplier_id')->references('id')->on('suppliers');
-            $table->foreign('farmer_id')->references('id')->on('farms');
+            $table->foreign('farm_id')->references('id')->on('farms');
             $table->foreign('product_id')->references('id')->on('products');
             $table->foreign('address_id')->references('id')->on('addresses');
             $table->foreign('delivery_id')->references('id')->on('users');
