@@ -23,6 +23,16 @@ class UserSeeder extends Seeder
             'gender' => 'male',
             'status' => true,
         ]);
+
+        User::create([
+            'name' => 'Mutaz',
+            'last_name' => 'Asem',
+            'email' => 'mu@admin.com',
+            'password' => Hash::make('m12345678'),
+            'phone' => '774743134',
+            'gender' => 'male',
+            'status' => true,
+        ]);
     }
 }
 //php artisan db:seed --class=UserSeeder
