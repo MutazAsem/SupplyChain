@@ -13,7 +13,12 @@ class Address extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name', 'description', 'city', 'address_link', 'addresseable_id', 'addresseable_type'
+        'name',
+        'description',
+        'city',
+        'address_link',
+        'addressable_id',
+        'addressable_type'
     ];
 
 
