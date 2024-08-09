@@ -63,6 +63,7 @@ class AddressResource extends Resource
                     ])
                     ->label('Location Belongs To')
                     ->searchable()
+                    ->required()
                     ->preload()
             ]);
     }

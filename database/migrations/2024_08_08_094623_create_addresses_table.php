@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('addressable_type');
             $table->softDeletes();
             $table->timestamps();
+            $table->unique(['addressable_id', 'addressable_type']);
         });
     }
 
