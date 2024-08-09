@@ -18,8 +18,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('city');
             $table->string('address_link')->nullable();
-            $table->unsignedBigInteger('addresseable_id');
-            $table->string('addresseable_type');
+            $table->unsignedBigInteger('addressable_id');
+            $table->string('addressable_type');
             $table->softDeletes();
             $table->timestamps();
         });

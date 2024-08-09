@@ -138,8 +138,8 @@ class ProductResource extends Resource
                 Tables\Filters\SelectFilter::make('category')
                     ->relationship('category', 'name')
                     ->options(fn(): array => Category::query()->pluck('name', 'id')->toArray())
-                    ->searchable(),
-
+                    ->searchable()
+                    ->preload(),
                 Tables\Filters\SelectFilter::make('farm')
                     ->relationship('farm', 'name')
                     ->options(fn(): array => Farm::query()->pluck('name', 'id')->toArray())
