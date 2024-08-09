@@ -61,21 +61,18 @@ class UserResource extends Resource
                             ->helperText('Phone number must start with 7 and have 9 digits'),
                         FileUpload::make('avatar_url')
                             ->label('avatar')
-                            ->directory('form-attachments')
+                            ->directory('avatar')
                             ->preserveFilenames()
                             ->image()
                             ->avatar()
-                            ->imageEditor()
-                            ->required()->directory(function ($record) {
-                                return 'avatar/' . ($record ? $record->id : 'new');
-                            }),
+                            ->imageEditor(),
                         Forms\Components\Select::make('gender')
                             ->options([
-                                'male' => UserGenderEnum::MALE->value,
-                                'female' => UserGenderEnum::FEMALE->value,
+                                'Male' => UserGenderEnum::MALE->value,
+                                'Female' => UserGenderEnum::FEMALE->value,
                             ]),
                         Forms\Components\Toggle::make('status')
-                            ->label('status')
+                            ->label('Active')
                             ->helperText('Toggle to activate or deactivate the user account')
                             ->default(true),
                     ])->columns(2)->columnSpan('full'),
@@ -86,7 +83,7 @@ class UserResource extends Resource
                             ->label('Password')
                             ->required()
                             ->password()
-                            ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                            ->dehydrateStateUsing(fn($state) => Hash::make($state))
                             ->minLength(8)
                             ->maxLength(255)
                             ->rule(Password::default())
@@ -100,7 +97,7 @@ class UserResource extends Resource
                             ->rule(Password::default())
                             ->same('password')
                             ->helperText('Re-enter your password to confirm.')
-                    ])->columns(2)->columnSpan('full')->visible(fn ($livewire) => $livewire instanceof CreateUser),
+                    ])->columns(2)->columnSpan('full')->visible(fn($livewire) => $livewire instanceof CreateUser),
 
                 Forms\Components\Section::make('Change Password')
                     ->schema([
@@ -118,7 +115,7 @@ class UserResource extends Resource
                             ->same('new_password')
                             ->nullable()
                             ->helperText('Re-enter your new password to confirm.')
-                    ])->columns(2)->columnSpan('full')->visible(fn ($livewire) => $livewire instanceof EditUser)
+                    ])->columns(2)->columnSpan('full')->visible(fn($livewire) => $livewire instanceof EditUser)
             ]);
     }
 
@@ -126,6 +123,10 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->label('id')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\ImageColumn::make('avatar_url')
                     ->label('avatar'),
                 Tables\Columns\TextColumn::make('name')
@@ -142,12 +143,12 @@ class UserResource extends Resource
                 Tables\Columns\IconColumn::make('status')
                     ->sortable()
                     ->toggleable()
-                    ->label('status')
+                    ->label('Active')
                     ->boolean(),
                 Tables\Columns\IconColumn::make('status')
                     ->sortable()
                     ->toggleable()
-                    ->label('status')
+                    ->label('Active')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('gender')
                     ->searchable()
@@ -173,8 +174,8 @@ class UserResource extends Resource
                     ])
                     ->query(function (Builder $query, array $data) {
                         return $query
-                            ->when($data['created_from'], fn ($query, $date) => $query->whereDate('created_at', '>=', $date))
-                            ->when($data['created_until'], fn ($query, $date) => $query->whereDate('created_at', '<=', $date));
+                            ->when($data['created_from'], fn($query, $date) => $query->whereDate('created_at', '>=', $date))
+                            ->when($data['created_until'], fn($query, $date) => $query->whereDate('created_at', '<=', $date));
                     }),
                 TrashedFilter::make(),
 

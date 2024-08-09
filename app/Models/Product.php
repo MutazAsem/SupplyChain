@@ -9,22 +9,31 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
 
     protected $fillable = [
-        'name', 'description', 'image', 'category_id', 'farm_id', 'unit', 'quantity_available',
-        'packaging', 'type','status',
+        'name',
+        'rfid_tag',
+        'slug',
+        'description',
+        'image',
+        'category_id',
+        'farm_id',
+        'unit',
+        'quantity_available',
+        'packaging',
+        'type',
+        'status',
     ];
 
-    public function category ():BelongsTo
+    public function category(): BelongsTo
     {
-        return $this->BelongsTo(Category::class,'category_id');
+        return $this->BelongsTo(Category::class, 'category_id');
     }
 
-    public function farm ():BelongsTo
+    public function farm(): BelongsTo
     {
-        return $this->BelongsTo(Farm::class,'farm_id');
+        return $this->BelongsTo(Farm::class, 'farm_id');
     }
-
 }
