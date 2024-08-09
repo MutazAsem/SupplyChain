@@ -12,11 +12,15 @@ class Category extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name', 'description', 'image', 'status',
+        'name',
+        'slug',
+        'description',
+        'image',
+        'status',
     ];
 
-    public function category ():HasMany
+    public function category(): HasMany
     {
-        return $this->HasMany(Product::class,'category_id');
+        return $this->HasMany(Product::class, 'category_id');
     }
 }
