@@ -8,6 +8,7 @@ use App\Filament\Resources\UserResource\Pages\CreateUser;
 use App\Filament\Resources\UserResource\Pages\EditUser;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
+use Filament\Tables\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Form;
@@ -153,6 +154,11 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('gender')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created')
+                    ->dateTime()
+                    ->toggleable()
+                    ->sortable(),
 
             ])
             ->filters([
@@ -160,7 +166,7 @@ class UserResource extends Resource
                     ->label('status')
                     ->boolean()
                     ->trueLabel('Only activate Users')
-                    ->falseLabel('Only Hidden Users')
+                    ->falseLabel('Only deactivate Users')
                     ->native(true),
                 SelectFilter::make('gender')
                     ->options([
@@ -179,7 +185,11 @@ class UserResource extends Resource
                     }),
                 TrashedFilter::make(),
 
-            ])
+            ])->filtersTriggerAction(
+                fn(Action $action) => $action
+                    ->button()
+                    ->label('Filter'),
+            )
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),

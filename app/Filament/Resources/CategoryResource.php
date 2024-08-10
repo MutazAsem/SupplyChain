@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
+use Filament\Tables\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -83,15 +84,24 @@ class CategoryResource extends Resource
                     ->sortable()
                     ->toggleable()
                     ->boolean(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created')
+                    ->dateTime()
+                    ->toggleable()
+                    ->sortable(),
             ])
             ->filters([
                 TernaryFilter::make('status')
                     ->label('status')
                     ->boolean()
-                    ->trueLabel('Only activate Category')
-                    ->falseLabel('Only Hidden Category')
+                    ->trueLabel('Only activate Categories')
+                    ->falseLabel('Only deactivate Categories')
                     ->native(true),
-            ])
+            ])->filtersTriggerAction(
+                fn(Action $action) => $action
+                    ->button()
+                    ->label('Filter'),
+            )
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),

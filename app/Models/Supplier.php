@@ -14,17 +14,22 @@ class Supplier extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name', 'description', 'image', 'owner_id', 'type',
-        'commercial_registration_number', 'status',
+        'name',
+        'description',
+        'image',
+        'owner_id',
+        'type',
+        'commercial_registration_number',
+        'status',
     ];
 
     protected $casts = [
         'city' => SupplierTypeEnum::class,
     ];
 
-    public function supplier_owner ():BelongsTo
+    public function supplier_owner(): BelongsTo
     {
-        return $this->BelongsTo(User::class,'owner_id');
+        return $this->BelongsTo(User::class, 'owner_id');
     }
 
     public function address(): MorphOne
