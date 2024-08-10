@@ -36,6 +36,7 @@ class SupplierResource extends Resource
                         ->maxLength(65535),
                     Forms\Components\FileUpload::make('image')
                         ->image()
+                        ->imageEditor()
                         ->directory('supplier-images')
                         ->nullable(),
                     Forms\Components\Select::make('owner_id')

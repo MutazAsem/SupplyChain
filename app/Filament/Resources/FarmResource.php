@@ -51,7 +51,8 @@ class FarmResource extends Resource
                         FileUpload::make('image')
                             ->label('Farm Image')
                             ->directory('farm-images')
-                            ->image(),
+                            ->image()
+                            ->imageEditor(),
                         TextInput::make('type')
                             ->label('Farm Type')
                             ->nullable()
