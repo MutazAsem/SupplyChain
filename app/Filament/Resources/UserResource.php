@@ -68,10 +68,7 @@ class UserResource extends Resource
                             ->avatar()
                             ->imageEditor(),
                         Forms\Components\Select::make('gender')
-                            ->options([
-                                'Male' => UserGenderEnum::MALE->value,
-                                'Female' => UserGenderEnum::FEMALE->value,
-                            ]),
+                            ->options(UserGenderEnum::class),
                         Forms\Components\Toggle::make('status')
                             ->label('Active')
                             ->helperText('Toggle to activate or deactivate the user account')
@@ -169,10 +166,7 @@ class UserResource extends Resource
                     ->falseLabel('Only deactivate Users')
                     ->native(true),
                 SelectFilter::make('gender')
-                    ->options([
-                        'male' => 'Male',
-                        'female' => 'Female',
-                    ]),
+                    ->options(UserGenderEnum::class),
                 Filter::make('created_at')
                     ->form([
                         Forms\Components\DatePicker::make('created_from')->label('Created From'),

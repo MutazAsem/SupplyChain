@@ -77,7 +77,6 @@ class FarmResource extends Resource
                         Select::make('owner_id')
                             ->label('Farm Owner')
                             ->relationship('farm_owner', 'name')
-                            ->options(User::all()->pluck('name', 'id'))
                             ->searchable()
                             ->preload()
                             ->helperText('Select the owner of this farm.')
