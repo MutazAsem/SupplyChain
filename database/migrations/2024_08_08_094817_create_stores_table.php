@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('farm_id');
             $table->unsignedBigInteger('product_id');
             $table->text('description')->nullable();
+            $table->string('unit');
             $table->decimal('quantity',10,2)->default(1);
             $table->decimal('unit_price',10,2);
             $table->boolean('is_available')->default(true);
