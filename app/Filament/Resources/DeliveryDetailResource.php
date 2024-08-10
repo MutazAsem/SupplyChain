@@ -20,6 +20,15 @@ class DeliveryDetailResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-truck';
 
+    protected static ?string $recordTitleAttribute = 'plate_number';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['plate_number', 'vehicle_type'];
+    }
+
+    protected static int $globalSearchResultsLimit = 5;
+
     public static function form(Form $form): Form
     {
         return $form

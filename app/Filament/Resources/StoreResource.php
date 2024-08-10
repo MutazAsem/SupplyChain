@@ -21,6 +21,15 @@ class StoreResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
+    protected static ?string $recordTitleAttribute = 'id';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['id', 'order.id'];
+    }
+
+    protected static int $globalSearchResultsLimit = 5;
+
     public static function form(Form $form): Form
     {
         return $form

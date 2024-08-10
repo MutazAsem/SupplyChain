@@ -23,6 +23,16 @@ class AddressResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
     protected static ?string $navigationLabel = 'Addresses';
 
+    protected static ?string $recordTitleAttribute = 'id';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name'];
+    }
+
+    protected static int $globalSearchResultsLimit = 5;
+
+
     public static function form(Form $form): Form
     {
         return $form
