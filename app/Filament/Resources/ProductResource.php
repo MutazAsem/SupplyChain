@@ -53,7 +53,8 @@ class ProductResource extends Resource
                     Forms\Components\FileUpload::make('image')
                         ->label('Image')
                         ->directory('product-images')
-                        ->image(),
+                        ->image()
+                        ->imageEditor(),
                     Forms\Components\Select::make('category_id')
                         ->label('Category')
                         ->relationship('category', 'name')

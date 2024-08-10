@@ -53,7 +53,8 @@ class CategoryResource extends Resource
                     Forms\Components\FileUpload::make('image')
                         ->label('Category Image')
                         ->directory('Category-images')
-                        ->image(),
+                        ->image()
+                        ->imageEditor(),
                     Forms\Components\Toggle::make('status')
                         ->label('Active')
                         ->helperText('Enable Or disable category visibility')
