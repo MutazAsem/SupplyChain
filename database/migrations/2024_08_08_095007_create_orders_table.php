@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('supplier_id');
             $table->unsignedBigInteger('farm_id');
             $table->unsignedBigInteger('product_id');
+            $table->string('unit');
             $table->decimal('quantity',10,2)->default(1);
             $table->decimal('unit_price',10,2);
             $table->string('status');
