@@ -4,11 +4,14 @@ namespace App\Filament\Widgets;
 
 use App\Enums\OrderStatusEnum;
 use App\Models\Order;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 
 class OrderChart extends ChartWidget
 {
+    use HasWidgetShield;
+    
     protected static ?string $heading = 'Chart';
 
     protected static ?int $sort = 1;

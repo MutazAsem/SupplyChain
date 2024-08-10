@@ -100,15 +100,16 @@ class ReportResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('name')
+                ->searchable(),
                 Tables\Columns\TextColumn::make('store.id')
+                    ->label('Store ID')
                     ->numeric()
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('inspector.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('quality_score')
                     ->numeric()
                     ->sortable(),

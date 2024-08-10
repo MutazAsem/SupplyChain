@@ -3,11 +3,14 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Order;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
 
 class OrderCountChart extends ChartWidget
 {
+    use HasWidgetShield;
+    
     protected static ?string $heading = 'Chart';
 
     protected static ?int $sort = 0;

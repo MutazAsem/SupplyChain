@@ -5,6 +5,7 @@ namespace App\Filament\Widgets;
 use App\Enums\OrderStatusEnum;
 use App\Filament\Resources\OrderResource;
 use App\Models\Order;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -12,6 +13,8 @@ use Filament\Widgets\TableWidget as BaseWidget;
 class LatestOrders extends BaseWidget
 {
 
+    use HasWidgetShield;
+    
     protected int | string | array $columnSpan = 'full';
 
     protected static ?int $sort = 2;
