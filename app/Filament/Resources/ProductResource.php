@@ -74,6 +74,10 @@ class ProductResource extends Resource
                         ->required()
                         ->helperText('Specify the unit of measure for the product')
                         ->maxLength(50),
+                    Forms\Components\TextInput::make('unit_price')
+                        ->required()
+                        ->numeric()
+                        ->reactive(),
                     Forms\Components\TextInput::make('quantity_available')
                         ->label('Quantity Available')
                         ->numeric()

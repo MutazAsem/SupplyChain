@@ -37,7 +37,7 @@ class Order extends Model
         return $this->BelongsTo(Product::class,'product_id');
     }
 
-    public function address_id ():BelongsTo
+    public function address ():BelongsTo
     {
         return $this->BelongsTo(Address::class,'address_id');
     }

@@ -39,6 +39,7 @@ class AddressResource extends Resource
                     ->nullable(),
                 Forms\Components\Select::make('city')
                     ->label('City')
+                    ->options(CityEnum::class)
                     ->options(
                         collect(CityEnum::cases())
                             ->mapWithKeys(fn($city) => [$city->value => $city->getLabel()])
@@ -99,7 +100,7 @@ class AddressResource extends Resource
                     ->label('Entity Name')
                     ->sortable()
                     ->searchable()
-                    ->formatStateUsing(fn($state, $record) => $record->addressable->name ?? 'N/A')
+                    // ->formatStateUsing(fn($state, $record) => $record->addressable->name ?? 'N/A')
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created')
