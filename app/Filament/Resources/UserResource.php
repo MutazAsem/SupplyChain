@@ -83,6 +83,11 @@ class UserResource extends Resource
                             ->imageEditor(),
                         Forms\Components\Select::make('gender')
                             ->options(UserGenderEnum::class),
+                        Forms\Components\Select::make('roles')
+                            ->relationship('roles', 'name')
+                            ->multiple()
+                            ->preload()
+                            ->searchable(),
                         Forms\Components\Toggle::make('status')
                             ->label('Active')
                             ->helperText('Toggle to activate or deactivate the user account')
@@ -147,11 +152,12 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->searchable()
                     ->sortable(),
-
                 Tables\Columns\TextColumn::make('phone')
                     ->searchable(),
-
-
+                Tables\Columns\TextColumn::make('roles.name')
+                    ->label('Role')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\IconColumn::make('status')
                     ->sortable()
                     ->toggleable()
