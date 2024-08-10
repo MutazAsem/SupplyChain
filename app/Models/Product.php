@@ -21,6 +21,7 @@ class Product extends Model
         'category_id',
         'farm_id',
         'unit',
+        'unit_price',
         'quantity_available',
         'packaging',
         'type',
