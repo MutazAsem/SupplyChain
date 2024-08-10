@@ -34,6 +34,9 @@ class OrderResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('supplier_id')
                             ->relationship('supplier', 'name')
+                            ->native(false)
+                            ->searchable()
+                            ->preload()
                             ->required()
                             ->markAsRequired(false)
                             ->reactive()
@@ -43,6 +46,9 @@ class OrderResource extends Resource
                             ),
                         Forms\Components\Select::make('farm_id')
                             ->relationship('farm', 'name')
+                            ->native(false)
+                            ->searchable()
+                            ->preload()
                             ->required()
                             ->markAsRequired(false)
                             ->reactive()
@@ -60,10 +66,16 @@ class OrderResource extends Resource
                                 }
                                 return [];
                             })
-                            ->disabled(fn(Forms\Get $get): bool => !filled($get('supplier_id')))
+                            // ->disabled(fn(Forms\Get $get): bool => !filled($get('supplier_id')))
+                            ->native(false)
+                            ->searchable()
+                            ->preload()
                             ->required()
                             ->markAsRequired(false),
                         Forms\Components\Select::make('product_id')
+                            ->native(false)
+                            ->searchable()
+                            ->preload()
                             ->required()
                             ->markAsRequired(false)
                             ->options(function (callable $get) {
@@ -75,18 +87,28 @@ class OrderResource extends Resource
                                 }
                                 return [];
                             })
-                            ->afterStateUpdated(function (callable $set, $state) {
+                            ->afterStateUpdated(function (callable $set, callable $get, $state) {
                                 if ($state) {
                                     $product = Product::find($state);
                                     if ($product) {
                                         $set('unit_price', $product->unit_price); // Set the unit price based on selected product
+                                        $set('quantity_available', $product->quantity_available); // Set available quantity for helper text
+
+
+                                        // Set the total price based on the default quantity of 1
+                                        $defaultQuantity = 1;
+                                        $set('total_price', $product->unit_price * $defaultQuantity);
                                     }
                                 }
                             })
                             ->reactive()
-                            ->disabled(fn(Forms\Get $get): bool => !filled($get('farm_id'))),
+                        // ->disabled(fn(Forms\Get $get): bool => !filled($get('farm_id')))
+                        ,
                         Forms\Components\Select::make('delivery_id')
                             ->relationship('delivery', 'name')
+                            ->native(false)
+                            ->searchable()
+                            ->preload()
                             ->required()
                             ->markAsRequired(false),
                         Forms\Components\TextInput::make('quantity')
@@ -94,12 +116,19 @@ class OrderResource extends Resource
                             ->markAsRequired(false)
                             ->minValue(1)
                             ->default(1.00)
-
+                            ->numeric()
                             ->reactive()
                             ->afterStateUpdated(function (callable $set, callable $get) {
                                 $quantity = $get('quantity') ?? 1;
                                 $unitPrice = $get('unit_price') ?? 0;
                                 $set('total_price', $quantity * $unitPrice); // Update total price based on quantity and unit price
+                            })
+                            ->maxValue(function (callable $get) {
+                                return $get('quantity_available') ?? PHP_INT_MAX; // Set max value based on available quantity
+                            })
+                            ->helperText(function (callable $get) {
+                                $available = $get('quantity_available');
+                                return $available ? "Available quantity: $available" : "Select a product to see available quantity";
                             }),
                         Forms\Components\TextInput::make('unit_price')
                             ->required()
@@ -206,20 +235,20 @@ class OrderResource extends Resource
                 //     })->pluck('name', 'id')),
 
                 Filter::make('created_at')
-                ->form([
-                    Forms\Components\DatePicker::make('created_from')->label('Created From')->native(false),
-                    Forms\Components\DatePicker::make('created_until')->label('Created Until')->native(false),
-                ])
-                ->query(function (Builder $query, array $data) {
-                    return $query
-                        ->when($data['created_from'], fn($query, $date) => $query->whereDate('created_at', '>=', $date))
-                        ->when($data['created_until'], fn($query, $date) => $query->whereDate('created_at', '<=', $date));
-                }),
-                ])->filtersTriggerAction(
-                    fn(Action $action) => $action
-                        ->button()
-                        ->label('Filter'),
-                )
+                    ->form([
+                        Forms\Components\DatePicker::make('created_from')->label('Created From')->native(false),
+                        Forms\Components\DatePicker::make('created_until')->label('Created Until')->native(false),
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return $query
+                            ->when($data['created_from'], fn($query, $date) => $query->whereDate('created_at', '>=', $date))
+                            ->when($data['created_until'], fn($query, $date) => $query->whereDate('created_at', '<=', $date));
+                    }),
+            ])->filtersTriggerAction(
+                fn(Action $action) => $action
+                    ->button()
+                    ->label('Filter'),
+            )
             ->actions([
                 Tables\Actions\ActionGroup::make([
 
