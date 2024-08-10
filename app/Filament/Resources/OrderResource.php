@@ -125,10 +125,12 @@ class OrderResource extends Resource
                             ->numeric()
                             ->reactive()
                             ->afterStateUpdated(function (callable $set, callable $get) {
-                                $quantity = $get('quantity') ?? 1;
-                                $unitPrice = $get('unit_price') ?? 0;
+                                $quantity = (float) $get('quantity') ?? 1;
+                                $unitPrice = (float) $get('unit_price') ?? 0;
                                 $set('total_price', $quantity * $unitPrice); // Update total price based on quantity and unit price
                             })
+                            ->live(onBlur: true)
+
                             ->maxValue(function (callable $get) {
                                 return $get('quantity_available') ?? PHP_INT_MAX; // Set max value based on available quantity
                             })
