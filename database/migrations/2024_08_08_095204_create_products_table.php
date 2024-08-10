@@ -22,6 +22,7 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('farm_id');
             $table->string('unit');
+            $table->decimal('unit_price',10,2);
             $table->integer('quantity_available');
             $table->string('packaging');
             $table->string('type');
