@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\FarmResource\Pages;
 use App\Models\Farm;
 use App\Models\User;
+use Filament\Tables\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -59,6 +60,8 @@ class FarmResource extends Resource
                             ->label('Commercial Registration Number')
                             ->helperText('Enter the commercial registration number for this farm.')
                             ->required()
+                            ->numeric()
+                            ->maxLength(11)
                             ->unique(Farm::class, 'commercial_registration_number', ignoreRecord: true),
                         Textarea::make('farming_methods')
                             ->label('Farming Methods')
@@ -76,6 +79,7 @@ class FarmResource extends Resource
                             ->relationship('farm_owner', 'name')
                             ->options(User::all()->pluck('name', 'id'))
                             ->searchable()
+                            ->preload()
                             ->helperText('Select the owner of this farm.')
                             ->required(),
                         Forms\Components\Toggle::make('status')
@@ -117,15 +121,24 @@ class FarmResource extends Resource
                     ->toggleable()
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created')
+                    ->dateTime()
+                    ->toggleable()
+                    ->sortable(),
             ])
             ->filters([
                 TernaryFilter::make('status')
                     ->label('status')
                     ->boolean()
-                    ->trueLabel('Only activate Farm')
-                    ->falseLabel('Only Hidden Farm')
+                    ->trueLabel('Only activate Farms')
+                    ->falseLabel('Only deactivate Farms')
                     ->native(true),
-            ])
+            ])->filtersTriggerAction(
+                fn(Action $action) => $action
+                    ->button()
+                    ->label('Filter'),
+            )
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),

@@ -7,13 +7,14 @@ use App\Models\Address;
 use App\Enums\CityEnum;
 use App\Models\Supplier;
 use App\Models\Farm;
-
+use Filament\Tables\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+
 
 class AddressResource extends Resource
 {
@@ -33,6 +34,7 @@ class AddressResource extends Resource
 
                 Forms\Components\Textarea::make('description')
                     ->label('Description')
+                    ->autosize()
                     ->maxLength(65535)
                     ->nullable(),
                 Forms\Components\Select::make('city')
@@ -43,6 +45,7 @@ class AddressResource extends Resource
                             ->toArray()
                     )
                     ->searchable()
+                    ->preload()
                     ->required(),
 
                 Forms\Components\TextInput::make('address_link')
@@ -98,6 +101,11 @@ class AddressResource extends Resource
                     ->searchable()
                     ->formatStateUsing(fn($state, $record) => $record->addressable->name ?? 'N/A')
                     ->toggleable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created')
+                    ->dateTime()
+                    ->toggleable()
+                    ->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('city')
@@ -110,7 +118,11 @@ class AddressResource extends Resource
                         'App\Models\Farm' => 'Farm',
                         'App\Models\Supplier' => 'Supplier',
                     ])->label('Entity Type'),
-            ])
+            ])->filtersTriggerAction(
+                fn(Action $action) => $action
+                    ->button()
+                    ->label('Filter'),
+            )
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('image')->nullable();
-            $table->unsignedBigInteger('owner_id');
+            $table->unsignedBigInteger('owner_id')->unique();
             $table->string('type')->nullable();
             $table->integer('commercial_registration_number')->unique();
             $table->string('farming_methods')->nullable();

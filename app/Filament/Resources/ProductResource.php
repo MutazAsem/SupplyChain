@@ -59,6 +59,7 @@ class ProductResource extends Resource
                         ->relationship('category', 'name')
                         ->options(Category::all()->pluck('name', 'id'))
                         ->searchable()
+                        ->preload()
                         ->helperText('Select the category to which this product belongs.')
                         ->required(),
                     Forms\Components\Select::make('farm_id')
@@ -66,6 +67,7 @@ class ProductResource extends Resource
                         ->relationship('farm', 'name')
                         ->options(Farm::all()->pluck('name', 'id'))
                         ->searchable()
+                        ->preload()
                         ->helperText('Select the farm where this product is produced.')
                         ->required(),
                     Forms\Components\TextInput::make('unit')
@@ -133,6 +135,11 @@ class ProductResource extends Resource
                     ->sortable()
                     ->toggleable()
                     ->boolean(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created')
+                    ->dateTime()
+                    ->toggleable()
+                    ->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('category')
@@ -147,8 +154,8 @@ class ProductResource extends Resource
                 TernaryFilter::make('status')
                     ->label('status')
                     ->boolean()
-                    ->trueLabel('Only activate Category')
-                    ->falseLabel('Only Hidden Category')
+                    ->trueLabel('Only activate Products')
+                    ->falseLabel('Only deactivate Products')
                     ->native(true),
 
             ])->filtersTriggerAction(
