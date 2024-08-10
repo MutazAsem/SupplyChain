@@ -25,86 +25,96 @@ class ProductResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make([
-                    Forms\Components\TextInput::make('name')
-                        ->required()
-                        ->live(onBlur: true)
-                        ->maxLength(255)
-                        ->unique(Product::class, 'name', ignoreRecord: true)
-                        ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
-                            if ($operation !== 'create') {
-                                return;
-                            }
-                            // Replace spaces with hyphens and trim any leading/trailing spaces
-                            $slug = preg_replace('/\s+/', '-', trim($state));
-                            $set('slug', $slug);
-                        }),
-                    Forms\Components\TextInput::make('slug')
-                        ->disabled()
-                        ->dehydrated()
-                        ->maxLength(255)
-                        ->required()
-                        ->unique(Product::class, 'slug', ignoreRecord: true),
-                    Forms\Components\Textarea::make('description')
-                        ->label('Description')
-                        ->autosize()
-                        ->maxLength(65535)
-                        ->nullable(),
-                    Forms\Components\FileUpload::make('image')
-                        ->label('Image')
-                        ->directory('product-images')
-                        ->image()
-                        ->imageEditor(),
-                    Forms\Components\Select::make('category_id')
-                        ->label('Category')
-                        ->relationship('category', 'name')
-                        ->searchable()
-                        ->preload()
-                        ->helperText('Select the category to which this product belongs.')
-                        ->required(),
-                    Forms\Components\Select::make('farm_id')
-                        ->label('Farm')
-                        ->relationship('farm', 'name')
-                        ->searchable()
-                        ->preload()
-                        ->helperText('Select the farm where this product is produced.')
-                        ->required(),
-                    Forms\Components\TextInput::make('unit')
-                        ->required()
-                        ->helperText('Specify the unit of measure for the product')
-                        ->maxLength(50),
-                    Forms\Components\TextInput::make('unit_price')
-                        ->required()
-                        ->numeric()
-                        ->reactive(),
-                    Forms\Components\TextInput::make('quantity_available')
-                        ->label('Quantity Available')
-                        ->numeric()
-                        ->maxLength(11)
-                        ->helperText('Enter the quantity of the product currently available.')
-                        ->required(),
-                    Forms\Components\TextInput::make('packaging')
-                        ->required()
-                        ->helperText('Describe the packaging of the product.')
-                        ->maxLength(255),
-                    Forms\Components\TextInput::make('type')
-                        ->required()
-                        ->helperText('Specify the type of product.')
-                        ->maxLength(255),
-                    Forms\Components\Toggle::make('status')
-                        ->label('Active')
-                        ->helperText('Enable or disable the status of the product.')
-                        ->default(true),
-                    Forms\Components\TextInput::make('rfid_tag')
-                        ->label('RFID Tag')
-                        ->maxLength(255)
-                        ->unique(Product::class, 'rfid_tag', ignoreRecord: true)
-                        ->nullable()
-                        ->helperText('Assign an RFID tag to this product for tracking purposes.'),
+                Forms\Components\Tabs::make('Product Details')
+                    ->tabs([
+                        Forms\Components\Tabs\Tab::make('General Information')
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->required()
+                                    ->live(onBlur: true)
+                                    ->maxLength(255)
+                                    ->unique(Product::class, 'name', ignoreRecord: true)
+                                    ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
+                                        if ($operation !== 'create') {
+                                            return;
+                                        }
+                                        $slug = preg_replace('/\s+/', '-', trim($state));
+                                        $set('slug', $slug);
+                                    }),
+                                Forms\Components\TextInput::make('slug')
+                                    ->disabled()
+                                    ->dehydrated()
+                                    ->maxLength(255)
+                                    ->required()
+                                    ->unique(Product::class, 'slug', ignoreRecord: true),
+                                Forms\Components\FileUpload::make('image')
+                                    ->label('Image')
+                                    ->directory('product-images')
+                                    ->image()
+                                    ->imageEditor(),
+                                Forms\Components\Textarea::make('description')
+                                    ->label('Description')
+                                    ->autosize()
+                                    ->maxLength(65535)
+                                    ->nullable(),
+                            ])
+                            ->columns(2),
 
-                ])->columns(2)
+                        Forms\Components\Tabs\Tab::make('Details')
+                            ->schema([
+                                Forms\Components\Select::make('category_id')
+                                    ->label('Category')
+                                    ->relationship('category', 'name')
+                                    ->searchable()
+                                    ->preload()
+                                    ->helperText('Select the category to which this product belongs.')
+                                    ->required(),
+                                Forms\Components\Select::make('farm_id')
+                                    ->label('Farm')
+                                    ->relationship('farm', 'name')
+                                    ->searchable()
+                                    ->preload()
+                                    ->helperText('Select the farm where this product is produced.')
+                                    ->required(),
+                                Forms\Components\TextInput::make('unit')
+                                    ->required()
+                                    ->helperText('Specify the unit of measure for the product')
+                                    ->maxLength(50),
+                                Forms\Components\TextInput::make('quantity_available')
+                                    ->label('Quantity Available')
+                                    ->numeric()
+                                    ->maxLength(11)
+                                    ->helperText('Enter the quantity of the product currently available.')
+                                    ->required(),
+                                Forms\Components\TextInput::make('packaging')
+                                    ->required()
+                                    ->helperText('Describe the packaging of the product.')
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('type')
+                                    ->required()
+                                    ->helperText('Specify the type of product.')
+                                    ->maxLength(255),
+                            ])
+                            ->columns(2),
+
+                        Forms\Components\Tabs\Tab::make('RFID & Status')
+                            ->schema([
+                                Forms\Components\TextInput::make('rfid_tag')
+                                    ->label('RFID Tag')
+                                    ->maxLength(255)
+                                    ->unique(Product::class, 'rfid_tag', ignoreRecord: true)
+                                    ->nullable()
+                                    ->helperText('Assign an RFID tag to this product for tracking purposes.'),
+                                Forms\Components\Toggle::make('status')
+                                    ->label('Active')
+                                    ->helperText('Enable or disable the status of the product.')
+                                    ->default(true),
+                            ])
+                            ->columns(2),
+                    ])->columnSpanFull(),
             ]);
     }
+
 
     public static function table(Table $table): Table
     {
