@@ -74,7 +74,7 @@ class FarmResource extends Resource
                             ->helperText('Enter the commercial registration number for this farm.')
                             ->required()
                             ->numeric()
-                            ->maxLength(11)
+                            ->maxLength(12)
                             ->unique(Farm::class, 'commercial_registration_number', ignoreRecord: true),
                         Textarea::make('farming_methods')
                             ->label('Farming Methods')
