@@ -39,11 +39,7 @@ class AddressResource extends Resource
                     ->nullable(),
                 Forms\Components\Select::make('city')
                     ->label('City')
-                    ->options(
-                        collect(CityEnum::cases())
-                            ->mapWithKeys(fn($city) => [$city->value => $city->getLabel()])
-                            ->toArray()
-                    )
+                    ->options(CityEnum::class)
                     ->searchable()
                     ->preload()
                     ->required(),
@@ -109,9 +105,9 @@ class AddressResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('city')
-                    ->options(collect(CityEnum::cases())
-                        ->mapWithKeys(fn($city) => [$city->value => $city->getLabel()])
-                        ->toArray()),
+                    ->options(CityEnum::class)
+                    ->searchable()
+                    ->preload(),
 
                 Tables\Filters\SelectFilter::make('addressable_type')
                     ->options([
