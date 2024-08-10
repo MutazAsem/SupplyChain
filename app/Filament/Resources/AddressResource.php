@@ -98,7 +98,7 @@ class AddressResource extends Resource
                     ->label('Entity Name')
                     ->sortable()
                     ->searchable()
-                    ->formatStateUsing(fn($state, $record) => $record->addressable->name ?? 'N/A')
+                    // ->formatStateUsing(fn($state, $record) => $record->addressable->name ?? 'N/A')
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created')
