@@ -37,7 +37,7 @@ class FarmResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Farm Details')
+                Forms\Components\Section::make('General Information')
                     ->schema([
                         TextInput::make('name')
                             ->label('Farm Name')
@@ -53,6 +53,18 @@ class FarmResource extends Resource
                             ->directory('farm-images')
                             ->image()
                             ->imageEditor(),
+
+                        Select::make('owner_id')
+                            ->label('Farm Owner')
+                            ->relationship('farm_owner', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->helperText('Select the owner of this farm.')
+                            ->required(),
+
+                    ])->columns(2),
+                Forms\Components\Section::make('Farm Details')
+                    ->schema([
                         TextInput::make('type')
                             ->label('Farm Type')
                             ->nullable()
@@ -75,19 +87,13 @@ class FarmResource extends Resource
                             ->nullable()
                             ->helperText('Enter the pesticides used on this farm.')
                             ->maxLength(255),
-                        Select::make('owner_id')
-                            ->label('Farm Owner')
-                            ->relationship('farm_owner', 'name')
-                            ->searchable()
-                            ->preload()
-                            ->helperText('Select the owner of this farm.')
-                            ->required(),
                         Forms\Components\Toggle::make('status')
                             ->label('Active')
                             ->default(true)
                             ->rules(['boolean'])
                             ->helperText('Toggle to activate or deactivate the farm.')
                     ])->columns(2),
+
             ]);
     }
 

@@ -27,43 +27,46 @@ class AddressResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->label('Address Name')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\Section::make('Address Details')->schema([
+                    Forms\Components\TextInput::make('name')
+                        ->label('Address Name')
+                        ->required()
+                        ->maxLength(255),
 
-                Forms\Components\Textarea::make('description')
-                    ->label('Description')
-                    ->autosize()
-                    ->maxLength(65535)
-                    ->nullable(),
-                Forms\Components\Select::make('city')
-                    ->label('City')
-                    ->options(CityEnum::class)
-                    ->searchable()
-                    ->preload()
-                    ->required(),
+                    Forms\Components\Textarea::make('description')
+                        ->label('Description')
+                        ->autosize()
+                        ->maxLength(65535)
+                        ->nullable(),
+                    Forms\Components\Select::make('city')
+                        ->label('City')
+                        ->options(CityEnum::class)
+                        ->searchable()
+                        ->preload()
+                        ->required(),
 
-                Forms\Components\TextInput::make('address_link')
-                    ->label('Google Maps Link')
-                    ->url()
-                    ->suffixIcon('heroicon-m-globe-alt')
-                    ->suffixIconColor('success')
-                    ->nullable(),
+                    Forms\Components\TextInput::make('address_link')
+                        ->label('Google Maps Link')
+                        ->url()
+                        ->suffixIcon('heroicon-m-globe-alt')
+                        ->suffixIconColor('success')
+                        ->nullable(),
 
-                MorphToSelect::make('addressable')
-                    ->types([
-                        MorphToSelect\Type::make(Farm::class)
-                            ->titleAttribute('name')
-                            ->label('Farm'),
-                        MorphToSelect\Type::make(Supplier::class)
-                            ->titleAttribute('name')
-                            ->label('Supplier')
-                    ])
-                    ->label('Location Belongs To')
-                    ->searchable()
-                    ->required()
-                    ->preload()
+                    MorphToSelect::make('addressable')
+                        ->types([
+                            MorphToSelect\Type::make(Farm::class)
+                                ->titleAttribute('name')
+                                ->label('Farm'),
+                            MorphToSelect\Type::make(Supplier::class)
+                                ->titleAttribute('name')
+                                ->label('Supplier')
+                        ])
+                        ->label('Location Belongs To')
+                        ->searchable()
+                        ->required()
+                        ->preload()
+
+                ])->columns(2),
             ]);
     }
 

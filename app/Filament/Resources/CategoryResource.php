@@ -25,7 +25,7 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make([
+                Forms\Components\Section::make('Category Details')->schema([
                     Forms\Components\TextInput::make('name')
                         ->required()
                         ->live(onBlur: true)

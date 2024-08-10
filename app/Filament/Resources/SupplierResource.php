@@ -25,20 +25,17 @@ class SupplierResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make([
+                Forms\Components\Section::make('Supplier Details')->schema([
                     Forms\Components\TextInput::make('name')
                         ->required()
                         ->maxLength(255),
-                    Forms\Components\Textarea::make('description')
-                        ->label('Description')
-                        ->autosize()
-                        ->nullable()
-                        ->maxLength(65535),
-                    Forms\Components\FileUpload::make('image')
-                        ->image()
-                        ->imageEditor()
-                        ->directory('supplier-images')
-                        ->nullable(),
+                    Forms\Components\TextInput::make('commercial_registration_number')
+                        ->label('Commercial Registration Number')
+                        ->helperText('Enter the commercial registration number for this Supplier.')
+                        ->numeric()
+                        ->maxLength(11)
+                        ->required()
+                        ->unique(Supplier::class, 'commercial_registration_number', ignoreRecord: true),
                     Forms\Components\Select::make('owner_id')
                         ->label('Owner')
                         ->relationship('supplier_owner', 'name')
@@ -51,13 +48,16 @@ class SupplierResource extends Resource
                         ->label('Type')
                         ->options(SupplierTypeEnum::class)
                         ->required(),
-                    Forms\Components\TextInput::make('commercial_registration_number')
-                        ->label('Commercial Registration Number')
-                        ->helperText('Enter the commercial registration number for this Supplier.')
-                        ->numeric()
-                        ->maxLength(11)
-                        ->required()
-                        ->unique(Supplier::class, 'commercial_registration_number', ignoreRecord: true),
+                    Forms\Components\Textarea::make('description')
+                        ->label('Description')
+                        ->autosize()
+                        ->nullable()
+                        ->maxLength(65535),
+                    Forms\Components\FileUpload::make('image')
+                        ->image()
+                        ->imageEditor()
+                        ->directory('supplier-images')
+                        ->nullable(),
                     Forms\Components\Toggle::make('status')
                         ->label('Active')
                         ->helperText('Enable or disable the status of the Supplier.')
