@@ -93,6 +93,8 @@ class OrderResource extends Resource
                                     if ($product) {
                                         $set('unit_price', $product->unit_price); // Set the unit price based on selected product
                                         $set('quantity_available', $product->quantity_available); // Set available quantity for helper text
+                                        $set('unit', $product->unit);
+
 
 
                                         // Set the total price based on the default quantity of 1
@@ -111,6 +113,10 @@ class OrderResource extends Resource
                             ->preload()
                             ->required()
                             ->markAsRequired(false),
+                        Forms\Components\TextInput::make('unit')
+                            ->required()
+                            ->markAsRequired(false)
+                            ->readOnly(),
                         Forms\Components\TextInput::make('quantity')
                             ->required()
                             ->markAsRequired(false)
@@ -136,10 +142,17 @@ class OrderResource extends Resource
                             ->minValue(1)
                             ->reactive()
                             ->readOnly(),
+                        Forms\Components\TextInput::make('total_price')
+                            ->required()
+                            ->markAsRequired(false)
+                            ->dehydrateStateUsing(
+                                fn($state, callable $get) => $get('quantity') * $get('unit_price')
+                            )
+                            ->readOnly(),
                         Forms\Components\ToggleButtons::make('status')
                             ->required()
                             ->markAsRequired(false)
-                            ->markAsRequired(false)->options(OrderStatusEnum::class)
+                            ->options(OrderStatusEnum::class)
                             ->icons([
                                 'New' => 'heroicon-o-sparkles',
                                 'Processing' => 'heroicon-o-arrow-path',
@@ -156,15 +169,8 @@ class OrderResource extends Resource
                             ])
                             ->inline()
                             ->default('New'),
-                        Forms\Components\TextInput::make('total_price')
-                            ->required()
-                            ->markAsRequired(false)
-                            ->dehydrateStateUsing(
-                                fn($state, callable $get) => $get('quantity') * $get('unit_price')
-                            )
-                            ->columnSpanFull()
-                            ->readOnly(),
                         Forms\Components\Textarea::make('note')
+                            ->label('Note (optional)')
                             ->maxLength(65535)
                             ->columnSpanFull(),
                     ])->columns(2)->columnSpan('full'),
@@ -175,6 +181,10 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->label('Order ID')
+                    ->numeric()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('supplier.name')
                     ->numeric()
                     ->sortable(),
@@ -184,10 +194,6 @@ class OrderResource extends Resource
                 Tables\Columns\TextColumn::make('product.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('address.name')
-                    ->numeric()
-                    ->sortable()
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('delivery.name')
                     ->numeric()
                     ->sortable(),
@@ -204,6 +210,15 @@ class OrderResource extends Resource
                     ->numeric()
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('unit')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('address.name')
+                    ->numeric()
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 // Tables\Columns\TextColumn::make('deleted_at')
                 //     ->dateTime()
                 //     ->sortable()

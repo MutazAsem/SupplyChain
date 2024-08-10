@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DeliveryDetailResource\Pages;
 use App\Filament\Resources\DeliveryDetailResource\RelationManagers;
 use App\Models\DeliveryDetail;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -17,23 +18,31 @@ class DeliveryDetailResource extends Resource
 {
     protected static ?string $model = DeliveryDetail::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-truck';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('delivery_id')
-                    ->relationship('delivery', 'name')
-                    ->required(),
-                Forms\Components\TextInput::make('plate_number')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('vehicle_type')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('guarantor_registration_no')
-                    ->numeric(),
+                Forms\Components\Section::make('Delivery Details')
+                    ->schema([
+                        Forms\Components\Select::make('delivery_id')
+                            ->relationship('delivery', 'name')
+                            ->required()
+                            ->markAsRequired(false),
+                        Forms\Components\TextInput::make('plate_number')
+                            ->required()
+                            ->markAsRequired(false)
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('vehicle_type')
+                            ->required()
+                            ->markAsRequired(false)
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('guarantor_registration_no')
+                            ->required()
+                            ->markAsRequired(false)
+                            ->numeric(),
+                    ])->columns(2)->columnSpan('full'),
             ]);
     }
 
@@ -50,11 +59,11 @@ class DeliveryDetailResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('guarantor_registration_no')
                     ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->searchable(),
+                // Tables\Columns\TextColumn::make('deleted_at')
+                //     ->dateTime()
+                //     ->sortable()
+                //     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -66,9 +75,18 @@ class DeliveryDetailResource extends Resource
             ])
             ->filters([
                 //
+                // Tables\Filters\SelectFilter::make('delivery name')
+                //     ->options(User::whereHas('roles', function ($query) {
+                //         $query->where('name', 'delivery');
+                //     })->pluck('name', 'id')),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

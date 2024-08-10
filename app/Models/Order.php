@@ -10,41 +10,49 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Order extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
 
     protected $fillable = [
-        'supplier_id', 'farm_id', 'product_id', 'quantity', 'unit_price', 'status',
-         'address_id', 'total_price', 'delivery_id','note',
+        'supplier_id',
+        'farm_id',
+        'product_id',
+        'unit',
+        'quantity',
+        'unit_price',
+        'status',
+        'address_id',
+        'total_price',
+        'delivery_id',
+        'note',
     ];
 
     protected $casts = [
         'city' => OrderStatusEnum::class,
     ];
 
-    public function supplier ():BelongsTo
+    public function supplier(): BelongsTo
     {
-        return $this->BelongsTo(Supplier::class,'supplier_id');
+        return $this->BelongsTo(Supplier::class, 'supplier_id');
     }
 
-    public function farm ():BelongsTo
+    public function farm(): BelongsTo
     {
-        return $this->BelongsTo(Farm::class,'farm_id');
+        return $this->BelongsTo(Farm::class, 'farm_id');
     }
 
-    public function product ():BelongsTo
+    public function product(): BelongsTo
     {
-        return $this->BelongsTo(Product::class,'product_id');
+        return $this->BelongsTo(Product::class, 'product_id');
     }
 
-    public function address ():BelongsTo
+    public function address(): BelongsTo
     {
-        return $this->BelongsTo(Address::class,'address_id');
+        return $this->BelongsTo(Address::class, 'address_id');
     }
 
-    public function delivery ():BelongsTo
+    public function delivery(): BelongsTo
     {
-        return $this->BelongsTo(User::class,'delivery_id');
+        return $this->BelongsTo(User::class, 'delivery_id');
     }
-
 }

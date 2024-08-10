@@ -19,7 +19,7 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
+    protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
 
     public static function form(Form $form): Form
     {
@@ -76,6 +76,18 @@ class ProductResource extends Resource
                                     ->preload()
                                     ->helperText('Select the farm where this product is produced.')
                                     ->required(),
+                                Forms\Components\TextInput::make('packaging')
+                                    ->required()
+                                    ->helperText('Describe the packaging of the product.')
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('type')
+                                    ->required()
+                                    ->helperText('Specify the type of product.')
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('unit_price')
+                                    ->required()
+                                    ->markAsRequired(false)
+                                    ->minValue(1),
                                 Forms\Components\TextInput::make('unit')
                                     ->required()
                                     ->helperText('Specify the unit of measure for the product')
@@ -86,14 +98,6 @@ class ProductResource extends Resource
                                     ->maxLength(11)
                                     ->helperText('Enter the quantity of the product currently available.')
                                     ->required(),
-                                Forms\Components\TextInput::make('packaging')
-                                    ->required()
-                                    ->helperText('Describe the packaging of the product.')
-                                    ->maxLength(255),
-                                Forms\Components\TextInput::make('type')
-                                    ->required()
-                                    ->helperText('Specify the type of product.')
-                                    ->maxLength(255),
                             ])
                             ->columns(2),
 

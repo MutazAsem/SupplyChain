@@ -30,7 +30,7 @@ class FarmResource extends Resource
 {
     protected static ?string $model = Farm::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-library';
+    protected static ?string $navigationIcon = 'heroicon-o-home-modern';
     protected static ?string $navigationLabel = 'Farms';
 
     public static function form(Form $form): Form
