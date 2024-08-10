@@ -53,11 +53,11 @@ class ProductResource extends Resource
                     Forms\Components\FileUpload::make('image')
                         ->label('Image')
                         ->directory('product-images')
-                        ->image(),
+                        ->image()
+                        ->imageEditor(),
                     Forms\Components\Select::make('category_id')
                         ->label('Category')
                         ->relationship('category', 'name')
-                        ->options(Category::all()->pluck('name', 'id'))
                         ->searchable()
                         ->preload()
                         ->helperText('Select the category to which this product belongs.')
@@ -65,7 +65,6 @@ class ProductResource extends Resource
                     Forms\Components\Select::make('farm_id')
                         ->label('Farm')
                         ->relationship('farm', 'name')
-                        ->options(Farm::all()->pluck('name', 'id'))
                         ->searchable()
                         ->preload()
                         ->helperText('Select the farm where this product is produced.')
@@ -148,13 +147,12 @@ class ProductResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('category')
                     ->relationship('category', 'name')
-                    ->options(fn(): array => Category::query()->pluck('name', 'id')->toArray())
                     ->searchable()
                     ->preload(),
                 Tables\Filters\SelectFilter::make('farm')
                     ->relationship('farm', 'name')
-                    ->options(fn(): array => Farm::query()->pluck('name', 'id')->toArray())
-                    ->searchable(),
+                    ->searchable()
+                    ->preload(),
                 TernaryFilter::make('status')
                     ->label('status')
                     ->boolean()

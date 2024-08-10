@@ -51,7 +51,8 @@ class FarmResource extends Resource
                         FileUpload::make('image')
                             ->label('Farm Image')
                             ->directory('farm-images')
-                            ->image(),
+                            ->image()
+                            ->imageEditor(),
                         TextInput::make('type')
                             ->label('Farm Type')
                             ->nullable()
@@ -77,7 +78,6 @@ class FarmResource extends Resource
                         Select::make('owner_id')
                             ->label('Farm Owner')
                             ->relationship('farm_owner', 'name')
-                            ->options(User::all()->pluck('name', 'id'))
                             ->searchable()
                             ->preload()
                             ->helperText('Select the owner of this farm.')

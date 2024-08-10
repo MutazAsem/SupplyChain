@@ -36,6 +36,7 @@ class SupplierResource extends Resource
                         ->maxLength(65535),
                     Forms\Components\FileUpload::make('image')
                         ->image()
+                        ->imageEditor()
                         ->directory('supplier-images')
                         ->nullable(),
                     Forms\Components\Select::make('owner_id')
@@ -48,11 +49,7 @@ class SupplierResource extends Resource
                         ->helperText('Select the owner of this supplier.'),
                     Forms\Components\Select::make('type')
                         ->label('Type')
-                        ->options(
-                            collect(SupplierTypeEnum::cases())
-                                ->mapWithKeys(fn($Type) => [$Type->value => $Type->getLabel()])
-                                ->toArray()
-                        )
+                        ->options(SupplierTypeEnum::class)
                         ->required(),
                     Forms\Components\TextInput::make('commercial_registration_number')
                         ->label('Commercial Registration Number')
@@ -101,9 +98,7 @@ class SupplierResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('type')
-                    ->options(collect(SupplierTypeEnum::cases())
-                        ->mapWithKeys(fn($Type) => [$Type->value => $Type->getLabel()])
-                        ->toArray()),
+                    ->options(SupplierTypeEnum::class),
                 Tables\Filters\TernaryFilter::make('status')
                     ->label('status')
                     ->boolean()
