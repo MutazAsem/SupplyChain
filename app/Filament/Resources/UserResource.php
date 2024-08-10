@@ -35,6 +35,20 @@ class UserResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
     protected static ?string $navigationLabel = 'Users';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'email', 'last_name', 'phone'];
+    }
+
+    protected static int $globalSearchResultsLimit = 5;
+
 
     public static function form(Form $form): Form
     {

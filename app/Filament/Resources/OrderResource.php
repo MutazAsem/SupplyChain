@@ -26,6 +26,20 @@ class OrderResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
 
+    protected static ?string $recordTitleAttribute = 'id';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['id', 'total_price'];
+    }
+
+    protected static int $globalSearchResultsLimit = 5;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -203,9 +217,12 @@ class OrderResource extends Resource
                 Tables\Columns\TextColumn::make('unit_price')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                Tables\Columns\SelectColumn::make('status')
+                    ->options(OrderStatusEnum::class)
+                    ->label('Status of order')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->selectablePlaceholder(false),
                 Tables\Columns\TextColumn::make('total_price')
                     ->numeric()
                     ->sortable()
