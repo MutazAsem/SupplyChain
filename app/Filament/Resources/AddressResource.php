@@ -39,7 +39,7 @@ class AddressResource extends Resource
                     ->nullable(),
                 Forms\Components\Select::make('city')
                     ->label('City')
-                    ->options(CityEnum::class
+                    ->options(CityEnum::class)
                     ->searchable()
                     ->preload()
                     ->required(),
