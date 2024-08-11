@@ -36,9 +36,14 @@ class DeliveryDetailResource extends Resource
                 Forms\Components\Section::make('Delivery Details')
                     ->schema([
                         Forms\Components\Select::make('delivery_id')
-                            ->relationship('delivery', 'name')
+                            ->options(User::whereHas('roles', function ($query) {
+                                $query->where('name', 'delivery');
+                            })->pluck('name', 'id'))
                             ->required()
-                            ->markAsRequired(false),
+                            ->markAsRequired(false)
+                            ->native(false)
+                            ->searchable()
+                            ->preload(),
                         Forms\Components\TextInput::make('plate_number')
                             ->required()
                             ->markAsRequired(false)
@@ -83,11 +88,10 @@ class DeliveryDetailResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-                // Tables\Filters\SelectFilter::make('delivery name')
-                //     ->options(User::whereHas('roles', function ($query) {
-                //         $query->where('name', 'delivery');
-                //     })->pluck('name', 'id')),
+                Tables\Filters\SelectFilter::make('delivery name')
+                    ->options(User::whereHas('roles', function ($query) {
+                        $query->where('name', 'delivery');
+                    })->pluck('name', 'id')),
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([

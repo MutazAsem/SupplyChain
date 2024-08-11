@@ -6,11 +6,14 @@ use App\Filament\Resources\StoreResource\Pages;
 use App\Filament\Resources\StoreResource\RelationManagers;
 use App\Models\Order;
 use App\Models\Store;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -36,15 +39,27 @@ class StoreResource extends Resource
             ->schema([
                 Forms\Components\Section::make('Store Details')
                     ->schema([
+                        // Forms\Components\Select::make('order_id')
+                        //     ->relationship('order', 'id')
+                        //     ->label('Order ID')
+                        //     ->native(false)
+                        //     ->searchable()
+                        //     ->preload()
+                        //     ->required()
+                        //     ->markAsRequired(false)
                         Forms\Components\Select::make('order_id')
-                            ->relationship('order', 'id')
                             ->label('Order ID')
-                            ->native(false)
+                            ->options(function () {
+                                // استبعاد العناصر التي تم اختيارها سابقًا
+                                $usedOrderIds = Store::pluck('order_id');
+                                return \App\Models\Order::whereNotIn('id', $usedOrderIds)->pluck('id', 'id');
+                            })
                             ->searchable()
                             ->preload()
                             ->required()
                             ->markAsRequired(false)
-                            ->unique(Order::class, 'id', ignoreRecord: true)
+                            ->rules(['unique:stores,order_id']) // تحقق من أن الحقل فريد
+                            // ->unique(Order::class, 'id', ignoreRecord: true)
                             ->reactive()
                             ->afterStateUpdated(function (callable $set, callable $get, $state) {
                                 if ($state) {
@@ -126,6 +141,7 @@ class StoreResource extends Resource
                             ->columnSpanFull(),
                         Forms\Components\Toggle::make('is_available')
                             ->required()
+                            ->markAsRequired(false)
                             ->default(true),
                     ])->columns(2)->columnSpan('full'),
             ]);
@@ -139,8 +155,10 @@ class StoreResource extends Resource
                     ->label('Store ID')
                     ->numeric()
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('order.id')
+                    ->label('Order ID')
                     ->numeric()
                     ->sortable()
                     ->searchable(),
@@ -198,7 +216,25 @@ class StoreResource extends Resource
                     ->relationship('farm', 'name'),
                 Tables\Filters\SelectFilter::make('Product name')
                     ->relationship('product', 'name'),
-            ])
+                Tables\Filters\SelectFilter::make('delivery name')
+                    ->options(User::whereHas('roles', function ($query) {
+                        $query->where('name', 'delivery');
+                    })->pluck('name', 'id')),
+                Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('created_from')->label('Created From')->native(false),
+                        Forms\Components\DatePicker::make('created_until')->label('Created Until')->native(false),
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return $query
+                            ->when($data['created_from'], fn($query, $date) => $query->whereDate('created_at', '>=', $date))
+                            ->when($data['created_until'], fn($query, $date) => $query->whereDate('created_at', '<=', $date));
+                    }),
+            ])->filtersTriggerAction(
+                fn(Action $action) => $action
+                    ->button()
+                    ->label('Filter'),
+            )
             ->actions([
                 Tables\Actions\ActionGroup::make([
 

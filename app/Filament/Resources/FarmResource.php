@@ -56,6 +56,7 @@ class FarmResource extends Resource
                         TextInput::make('name')
                             ->label('Farm Name')
                             ->required()
+                            ->markAsRequired(false)
                             ->maxLength(255),
                         Textarea::make('description')
                             ->label('Farm Description')
@@ -70,7 +71,11 @@ class FarmResource extends Resource
 
                         Select::make('owner_id')
                             ->label('Farm Owner')
-                            ->relationship('farm_owner', 'name')
+                            ->options(User::whereHas('roles', function ($query) {
+                                $query->where('name', 'farmer');
+                            })->pluck('name', 'id'))
+                            ->markAsRequired(false)
+                            ->native(false)
                             ->searchable()
                             ->preload()
                             ->helperText('Select the owner of this farm.')
@@ -87,6 +92,7 @@ class FarmResource extends Resource
                             ->label('Commercial Registration Number')
                             ->helperText('Enter the commercial registration number for this farm.')
                             ->required()
+                            ->markAsRequired(false)
                             ->numeric()
                             ->maxLength(12)
                             ->unique(Farm::class, 'commercial_registration_number', ignoreRecord: true),
@@ -115,10 +121,6 @@ class FarmResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('id')
-                    ->sortable()
-                    ->searchable(),
                 TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
@@ -148,6 +150,10 @@ class FarmResource extends Resource
                     ->sortable(),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('Farmer name')
+                    ->options(User::whereHas('roles', function ($query) {
+                        $query->where('name', 'farmer');
+                    })->pluck('name', 'id')),
                 TernaryFilter::make('status')
                     ->label('status')
                     ->boolean()

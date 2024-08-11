@@ -14,9 +14,9 @@ class OrderOverview extends BaseWidget
             Stat::make('New Orders', Order::query()->where('status','New')->count()),
             Stat::make('Processing Orders', Order::query()->where('status','Processing')->count()),
             Stat::make('Shipped Orders', Order::query()->where('status','Shipped')->count()),
-            // Stat::make('Delivered Orders', Order::query()->where('status','Delivered')->count()),
+            Stat::make('Delivered Orders', Order::query()->where('status','Delivered')->count()),
             Stat::make('Cancelled Orders', Order::query()->where('status','Cancelled')->count()),
-            Stat::make('Total Orders', Order::all()->count()),
+            // Stat::make('Total Orders', Order::all()->count()),
             Stat::make('Total Price', '$' . number_format(Order::sum('total_price'), 2)),
         ];
     }

@@ -42,6 +42,7 @@ class CategoryResource extends Resource
                 Forms\Components\Section::make('Category Details')->schema([
                     Forms\Components\TextInput::make('name')
                         ->required()
+                        ->markAsRequired(false)
                         ->live(onBlur: true)
                         ->maxLength(255)
                         ->unique(Category::class, 'name', ignoreRecord: true)
@@ -82,10 +83,6 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('id')
-                    ->sortable()
-                    ->searchable(),
                 Tables\Columns\ImageColumn::make('image')
                     ->label('Image')
                     ->toggleable(),
