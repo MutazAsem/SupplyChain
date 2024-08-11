@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->unsignedBigInteger('owner_id')->unique();
             $table->string('type')->nullable();
-            $table->integer('commercial_registration_number')->unique();
+            $table->unsignedBigInteger('commercial_registration_number')->unique();
             $table->string('farming_methods')->nullable();
             $table->string('pesticides')->nullable();
             $table->boolean('status')->default(true);

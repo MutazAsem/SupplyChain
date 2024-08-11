@@ -47,7 +47,7 @@ class SupplierResource extends Resource
                         ->label('Commercial Registration Number')
                         ->helperText('Enter the commercial registration number for this Supplier.')
                         ->numeric()
-                        ->maxLength(11)
+                        ->maxLength(12)
                         ->required()
                         ->unique(Supplier::class, 'commercial_registration_number', ignoreRecord: true),
                     Forms\Components\Select::make('owner_id')
