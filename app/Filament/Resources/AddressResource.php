@@ -21,6 +21,9 @@ class AddressResource extends Resource
     protected static ?string $model = Address::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
+
+    protected static ?string $navigationGroup = 'User Management';
+    protected static ?int $navigationSort = 2;
     protected static ?string $navigationLabel = 'Addresses';
 
     protected static ?string $recordTitleAttribute = 'id';
