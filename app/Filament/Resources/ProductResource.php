@@ -45,6 +45,7 @@ class ProductResource extends Resource
                             ->schema([
                                 Forms\Components\TextInput::make('name')
                                     ->required()
+                                    ->markAsRequired(false)
                                     ->live(onBlur: true)
                                     ->maxLength(255)
                                     ->unique(Product::class, 'name', ignoreRecord: true)
@@ -81,21 +82,27 @@ class ProductResource extends Resource
                                     ->relationship('category', 'name')
                                     ->searchable()
                                     ->preload()
+                                    ->native(false)
                                     ->helperText('Select the category to which this product belongs.')
-                                    ->required(),
+                                    ->required()
+                                    ->markAsRequired(false),
                                 Forms\Components\Select::make('farm_id')
                                     ->label('Farm')
                                     ->relationship('farm', 'name')
                                     ->searchable()
                                     ->preload()
+                                    ->native(false)
                                     ->helperText('Select the farm where this product is produced.')
-                                    ->required(),
+                                    ->required()
+                                    ->markAsRequired(false),
                                 Forms\Components\TextInput::make('packaging')
                                     ->required()
+                                    ->markAsRequired(false)
                                     ->helperText('Describe the packaging of the product.')
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('type')
                                     ->required()
+                                    ->markAsRequired(false)
                                     ->helperText('Specify the type of product.')
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('unit_price')
@@ -104,6 +111,7 @@ class ProductResource extends Resource
                                     ->minValue(1),
                                 Forms\Components\TextInput::make('unit')
                                     ->required()
+                                    ->markAsRequired(false)
                                     ->helperText('Specify the unit of measure for the product')
                                     ->maxLength(50),
                                 Forms\Components\TextInput::make('quantity_available')
@@ -111,7 +119,8 @@ class ProductResource extends Resource
                                     ->numeric()
                                     ->maxLength(11)
                                     ->helperText('Enter the quantity of the product currently available.')
-                                    ->required(),
+                                    ->required()
+                                    ->markAsRequired(false),
                             ])
                             ->columns(2),
 
@@ -138,10 +147,6 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('id')
-                    ->sortable()
-                    ->searchable(),
                 Tables\Columns\ImageColumn::make('image')
                     ->label('Image')
                     ->toggleable(),
@@ -155,17 +160,24 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('farm.name')
                     ->label('Farm')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('unit')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('unit_price')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('quantity_available')
                     ->label('qty')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('rfid_tag')
-                    ->label('RFID')
-                    ->searchable()
                     ->sortable(),
                 Tables\Columns\IconColumn::make('status')->label('Active')
                     ->sortable()
                     ->toggleable()
                     ->boolean(),
+                Tables\Columns\TextColumn::make('rfid_tag')
+                    ->label('RFID')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created')
                     ->dateTime()

@@ -6,6 +6,7 @@ use App\Enums\SupplierTypeEnum;
 use App\Filament\Resources\SupplierResource\Pages;
 use App\Filament\Resources\SupplierResource\RelationManagers;
 use App\Models\Supplier;
+use App\Models\User;
 use Filament\Tables\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -42,6 +43,7 @@ class SupplierResource extends Resource
                 Forms\Components\Section::make('Supplier Details')->schema([
                     Forms\Components\TextInput::make('name')
                         ->required()
+                        ->markAsRequired(false)
                         ->maxLength(255),
                     Forms\Components\TextInput::make('commercial_registration_number')
                         ->label('Commercial Registration Number')
@@ -49,19 +51,26 @@ class SupplierResource extends Resource
                         ->numeric()
                         ->maxLength(12)
                         ->required()
+                        ->markAsRequired(false)
                         ->unique(Supplier::class, 'commercial_registration_number', ignoreRecord: true),
                     Forms\Components\Select::make('owner_id')
                         ->label('Owner')
-                        ->relationship('supplier_owner', 'name')
+                        ->options(User::whereHas('roles', function ($query) {
+                            $query->where('name', 'supplier');
+                        })->pluck('name', 'id'))
                         ->unique(Supplier::class, 'owner_id', ignoreRecord: true)
                         ->required()
+                        ->markAsRequired(false)
                         ->searchable()
                         ->preload()
+                        ->native(false)
                         ->helperText('Select the owner of this supplier.'),
                     Forms\Components\Select::make('type')
                         ->label('Type')
                         ->options(SupplierTypeEnum::class)
-                        ->required(),
+                        ->required()
+                        ->markAsRequired(false)
+                        ->native(false),
                     Forms\Components\Textarea::make('description')
                         ->label('Description')
                         ->autosize()
@@ -76,7 +85,6 @@ class SupplierResource extends Resource
                         ->label('Active')
                         ->helperText('Enable or disable the status of the Supplier.')
                         ->default(true),
-
                 ])->columns(2),
             ]);
     }
@@ -111,6 +119,10 @@ class SupplierResource extends Resource
                     ->sortable(),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('Supplier name')
+                    ->options(User::whereHas('roles', function ($query) {
+                        $query->where('name', 'supplier');
+                    })->pluck('name', 'id')),
                 Tables\Filters\SelectFilter::make('type')
                     ->options(SupplierTypeEnum::class),
                 Tables\Filters\TernaryFilter::make('status')

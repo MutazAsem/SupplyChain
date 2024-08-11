@@ -42,7 +42,6 @@ class AddressResource extends Resource
                         ->label('Address Name')
                         ->required()
                         ->maxLength(255),
-
                     Forms\Components\Textarea::make('description')
                         ->label('Description')
                         ->autosize()
@@ -53,15 +52,15 @@ class AddressResource extends Resource
                         ->options(CityEnum::class)
                         ->searchable()
                         ->preload()
-                        ->required(),
-
+                        ->native(false)
+                        ->required()
+                        ->markAsRequired(false),
                     Forms\Components\TextInput::make('address_link')
                         ->label('Google Maps Link')
                         ->url()
                         ->suffixIcon('heroicon-m-globe-alt')
                         ->suffixIconColor('success')
                         ->nullable(),
-
                     MorphToSelect::make('addressable')
                         ->types([
                             MorphToSelect\Type::make(Farm::class)
@@ -75,7 +74,6 @@ class AddressResource extends Resource
                         ->searchable()
                         ->required()
                         ->preload()
-
                 ])->columns(2),
             ]);
     }
@@ -84,28 +82,21 @@ class AddressResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('id')
-                    ->sortable()
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Name')
                     ->sortable()
                     ->searchable(),
-
                 Tables\Columns\TextColumn::make('city')
                     ->label('City')
                     ->toggleable()
                     ->sortable(),
-
                 Tables\Columns\TextColumn::make('addressable_type')
-                    ->label('Entity Type')
+                    ->label('Address Type')
                     ->formatStateUsing(fn($state) => class_basename($state))
                     ->toggleable()
                     ->sortable(),
-
                 Tables\Columns\TextColumn::make('addressable.name')
-                    ->label('Entity Name')
+                    ->label('Address Owner Name')
                     ->sortable()
                     ->searchable()
                     // ->formatStateUsing(fn($state, $record) => $record->addressable->name ?? 'N/A')
@@ -126,7 +117,7 @@ class AddressResource extends Resource
                     ->options([
                         'App\Models\Farm' => 'Farm',
                         'App\Models\Supplier' => 'Supplier',
-                    ])->label('Entity Type'),
+                    ])->label('Address Type'),
             ])->filtersTriggerAction(
                 fn(Action $action) => $action
                     ->button()

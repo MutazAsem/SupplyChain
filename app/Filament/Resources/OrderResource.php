@@ -121,7 +121,9 @@ class OrderResource extends Resource
                         // ->disabled(fn(Forms\Get $get): bool => !filled($get('farm_id')))
                         ,
                         Forms\Components\Select::make('delivery_id')
-                            ->relationship('delivery', 'name')
+                            ->options(User::whereHas('roles', function ($query) {
+                                $query->where('name', 'delivery');
+                            })->pluck('name', 'id'))
                             ->native(false)
                             ->searchable()
                             ->preload()
@@ -262,12 +264,10 @@ class OrderResource extends Resource
                     ->relationship('farm', 'name'),
                 Tables\Filters\SelectFilter::make('Product name')
                     ->relationship('product', 'name'),
-
-                // Tables\Filters\SelectFilter::make('delivery name')
-                //     ->options(User::whereHas('roles', function ($query) {
-                //         $query->where('name', 'delivery');
-                //     })->pluck('name', 'id')),
-
+                Tables\Filters\SelectFilter::make('delivery name')
+                    ->options(User::whereHas('roles', function ($query) {
+                        $query->where('name', 'delivery');
+                    })->pluck('name', 'id')),
                 Filter::make('created_at')
                     ->form([
                         Forms\Components\DatePicker::make('created_from')->label('Created From')->native(false),

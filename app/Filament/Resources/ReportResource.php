@@ -49,7 +49,9 @@ class ReportResource extends Resource
                             ->required()
                             ->markAsRequired(false),
                         Forms\Components\Select::make('inspector_id')
-                            ->relationship('inspector', 'name')
+                            ->options(User::whereHas('roles', function ($query) {
+                                $query->where('name', 'inspector');
+                            })->pluck('name', 'id'))
                             ->native(false)
                             ->searchable()
                             ->preload()
@@ -101,7 +103,7 @@ class ReportResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                ->searchable(),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('store.id')
                     ->label('Store ID')
                     ->numeric()
@@ -136,11 +138,10 @@ class ReportResource extends Resource
                     ->relationship('store', 'id')
                     ->searchable()
                     ->preload(),
-
-                // Tables\Filters\SelectFilter::make('delivery name')
-                //     ->options(User::whereHas('roles', function ($query) {
-                //         $query->where('name', 'delivery');
-                //     })->pluck('name', 'id')),
+                Tables\Filters\SelectFilter::make('Inspector name')
+                    ->options(User::whereHas('roles', function ($query) {
+                        $query->where('name', 'inspector');
+                    })->pluck('name', 'id')),
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([

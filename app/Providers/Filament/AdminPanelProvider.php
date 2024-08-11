@@ -73,10 +73,10 @@ class AdminPanelProvider extends PanelProvider
                     ->label(fn () => auth()->user()->name)
                     ->url(fn (): string => EditProfilePage::getUrl())
                     ->icon('heroicon-m-user-circle'),
-                MenuItem::make()
-                    ->label('My profile')
-                    ->url(fn (): string => EditProfilePage::getUrl())
-                    ->icon('heroicon-o-cog-6-tooth'),
+                // MenuItem::make()
+                //     ->label('My profile')
+                //     ->url(fn (): string => EditProfilePage::getUrl())
+                //     ->icon('heroicon-o-cog-6-tooth'),
                 'logout' => MenuItem::make()->label('Log Out')
             ]);;
     }
