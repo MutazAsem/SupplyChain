@@ -4,8 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\StoreResource\Pages;
 use App\Filament\Resources\StoreResource\RelationManagers;
+use App\Models\Address;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Store;
+use App\Models\Supplier;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
@@ -98,23 +101,90 @@ class StoreResource extends Resource
 
                         Forms\Components\TextInput::make('supplier_name')
                             ->label('Supplier Name')
-                            ->readonly(),
-                        Forms\Components\Select::make('supplier_id')
-                            ->relationship('supplier', 'name')
-                            ->required()
-                            ->hidden(),
+                            ->readonly()
+                            ->visibleOn('create'),
                         Forms\Components\TextInput::make('farm_name')
                             ->label('Farm Name')
-                            ->readonly(),
+                            ->readonly()
+                            ->visibleOn('create'),
                         Forms\Components\TextInput::make('product_name')
                             ->label('Product Name')
-                            ->readonly(),
+                            ->readonly()
+                            ->visibleOn('create'),
                         Forms\Components\TextInput::make('address_name')
                             ->label('Address Name')
-                            ->readonly(),
+                            ->readonly()
+                            ->visibleOn('create'),
                         Forms\Components\TextInput::make('delivery_name')
                             ->label('Delivery Name')
-                            ->readonly(),
+                            ->readonly()
+                            ->visibleOn('create'),
+                        Forms\Components\Select::make('supplier_id')
+                            ->relationship('supplier', 'name')
+                            ->native(false)
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->markAsRequired(false)
+                            ->reactive()
+                            ->visibleOn('edit')
+                            ->disabled(),
+                        Forms\Components\Select::make('farm_id')
+                            ->relationship('farm', 'name')
+                            ->native(false)
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->markAsRequired(false)
+                            ->reactive()
+                            ->visibleOn('edit')
+                            ->disabled(),
+                        Forms\Components\Select::make('address_id')
+                            ->options(function (callable $get) {
+                                $supplierId = $get('supplier_id');
+                                if ($supplierId) {
+                                    return Address::where('addressable_type', Supplier::class)
+                                        ->where('addressable_id', $supplierId)
+                                        ->pluck('name', 'id')
+                                        ->toArray();
+                                }
+                                return [];
+                            })
+                            ->native(false)
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->markAsRequired(false)
+                            ->visibleOn('edit')
+                            ->disabled(),
+                        Forms\Components\Select::make('product_id')
+                            ->native(false)
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->markAsRequired(false)
+                            ->options(function (callable $get) {
+                                $farmId = $get('farm_id');
+                                if ($farmId) {
+                                    return Product::where('farm_id', $farmId)
+                                        ->pluck('name', 'id')
+                                        ->toArray();
+                                }
+                                return [];
+                            })
+                        ->visibleOn('edit')
+                        ->disabled(),
+                        Forms\Components\Select::make('delivery_id')
+                            ->options(User::whereHas('roles', function ($query) {
+                                $query->where('name', 'delivery');
+                            })->pluck('name', 'id'))
+                            ->native(false)
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->markAsRequired(false)
+                            ->visibleOn('edit')
+                            ->disabled(),
                         Forms\Components\TextInput::make('unit')
                             ->required()
                             ->markAsRequired(false)
