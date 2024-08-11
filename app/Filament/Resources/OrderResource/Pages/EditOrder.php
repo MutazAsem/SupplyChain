@@ -15,7 +15,18 @@ class EditOrder extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()->before(function ($record) {
+                // استعادة المنتج بناءً على معرف المنتج في الطلب
+                $product = Product::find($record->product_id);
+
+                if ($product) {
+                    // إضافة الكمية الموجودة في الطلب إلى الكمية المتاحة في المنتج
+                    $product->quantity_available += $record->quantity;
+
+                    // حفظ التعديلات على المنتج
+                    $product->save();
+                }
+            }),
         ];
     }
 
