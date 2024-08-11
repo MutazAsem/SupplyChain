@@ -20,6 +20,9 @@ class DeliveryDetailResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-truck';
 
+    protected static ?string $navigationGroup = 'Orders & Deliveries';
+    protected static ?int $navigationSort = 2;
+
     protected static ?string $recordTitleAttribute = 'plate_number';
 
     public static function getGloballySearchableAttributes(): array

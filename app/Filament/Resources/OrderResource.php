@@ -26,6 +26,9 @@ class OrderResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
 
+    protected static ?string $navigationGroup = 'Orders & Deliveries';
+    protected static ?int $navigationSort = 1;
+
     protected static ?string $recordTitleAttribute = 'id';
 
     public static function getGloballySearchableAttributes(): array

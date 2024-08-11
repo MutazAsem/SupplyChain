@@ -24,6 +24,8 @@ class StoreResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
+    protected static ?string $navigationGroup = 'Products & Inventory';
+    protected static ?int $navigationSort = 3;
     protected static ?string $recordTitleAttribute = 'id';
 
     public static function getGloballySearchableAttributes(): array

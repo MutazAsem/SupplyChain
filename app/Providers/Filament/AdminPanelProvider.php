@@ -70,14 +70,20 @@ class AdminPanelProvider extends PanelProvider
                     ->shouldShowAvatarForm()
             ])->userMenuItems([
                 'profile' => MenuItem::make()
-                    ->label(fn () => auth()->user()->name)
-                    ->url(fn (): string => EditProfilePage::getUrl())
+                    ->label(fn() => auth()->user()->name)
+                    ->url(fn(): string => EditProfilePage::getUrl())
                     ->icon('heroicon-m-user-circle'),
                 // MenuItem::make()
                 //     ->label('My profile')
                 //     ->url(fn (): string => EditProfilePage::getUrl())
                 //     ->icon('heroicon-o-cog-6-tooth'),
                 'logout' => MenuItem::make()->label('Log Out')
-            ]);;
+            ])->navigationGroups([
+                'Products & Inventory',
+                'Orders & Deliveries',
+                'User Management',
+                'Reports & Analytics',
+                'permissions'
+            ]);
     }
 }
