@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\DB;
 class OrderChart extends ChartWidget
 {
     use HasWidgetShield;
-    
-    protected static ?string $heading = 'Chart';
+
+    protected static ?string $heading = 'Order Status Overview';
 
     protected static ?int $sort = 1;
 

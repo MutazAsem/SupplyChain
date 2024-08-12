@@ -10,8 +10,8 @@ use Filament\Widgets\ChartWidget;
 class OrderCountChart extends ChartWidget
 {
     use HasWidgetShield;
-    
-    protected static ?string $heading = 'Chart';
+
+    protected static ?string $heading = 'Orders by Date';
 
     protected static ?int $sort = 0;
 
