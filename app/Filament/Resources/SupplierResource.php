@@ -64,6 +64,7 @@ class SupplierResource extends Resource
                         ->unique(Supplier::class, 'owner_id', ignoreRecord: true)
                         ->required()
                         ->markAsRequired(false)
+                        ->rules(['unique:suppliers,owner_id'])
                         ->searchable()
                         ->preload()
                         ->native(false)

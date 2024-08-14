@@ -79,6 +79,7 @@ class FarmResource extends Resource
                             })->pluck('name', 'id'))
                             ->markAsRequired(false)
                             ->native(false)
+                            ->rules(['unique:farms,owner_id'])
                             ->searchable()
                             ->preload()
                             ->helperText('Select the owner of this farm.')
